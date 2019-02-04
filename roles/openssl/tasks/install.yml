@@ -100,7 +100,7 @@
 - name: Add OpenSSL executables to PATH
   template:
     src: openssl.sh.j2
-    dest: /etc/profile.d/openss.sh
+    dest: /etc/profile.d/openssl.sh
     owner: root
     group: root
     mode: 0644
