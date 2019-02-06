@@ -3,16 +3,16 @@
 # It contains all roles from this repository.
 # You should copy it and use different host from your Inventory file
 # All files in playbooks directory will be ignored, except of this file
-- hosts: ansible01
+- hosts: dev01
   become: yes
   become_user: root
   roles:
 #    - ../roles/centos
 #    - ../roles/ntp
-    - ../roles/openssl
+#    - ../roles/openssl
 #    - ../roles/git
 #    - ../roles/httpd
-#    - ../roles/nodejs
+     - ../roles/nodejs
 #    - ../roles/awscli
 #    - ../roles/mysql
 #    - ../roles/php

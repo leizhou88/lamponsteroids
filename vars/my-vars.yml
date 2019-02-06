@@ -6,3 +6,6 @@ openssl_build_group: wheel
 git_build_user: lei
 git_build_group: wheel
 git_version: 2.19.2
+
+# Override role default
+nodejs_version: "8.15.0"
