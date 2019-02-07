@@ -1,0 +1,39 @@
+---
+
+# Check if Node.js is installed 
+# - TODO: check if nodejs version satisfies our need, and invoke "nodejs" role if necessary
+#
+- name: Check if Node.js is installed
+  command: node --version warn=no
+  register: nodejs_is_installed_test
+  ignore_errors: yes
+  changed_when: false
+
+- set_fact:
+    nodejs_is_installed: "{{ nodejs_is_installed_test.rc != 2 }}"
+
+- fail:
+    msg: Please install a proper version of nodejs first.
+  when: not nodejs_is_installed
+
+- name: import microsoft_asc key
+  rpm_key: 
+    state: present
+    key: "{{microsoft_asc_url}}"
+
+- name: copy to /etc/yum.repos.d/vscode.repo
+  copy:
+    src: vscode.repo
+    dest: /etc/yum.repos.d/vscode.repo
+    owner: root
+    group: root
+    mode: 0644
+    force: false
+
+- name: yum check-update and install vscode
+  yum:
+    name: code
+    update_cache: true
+    state: latest
+
+  

@@ -12,7 +12,7 @@
 #    - ../roles/openssl
 #    - ../roles/git
 #    - ../roles/httpd
-     - ../roles/nodejs
+#    - ../roles/nodejs
 #    - ../roles/awscli
 #    - ../roles/mysql
 #    - ../roles/php
