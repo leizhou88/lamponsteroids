@@ -73,7 +73,6 @@ You can setup logrotate scripts with this role as well.
 
 **redis** - Install and configure latest version of redis (4.0.1)
 
-Changelog
----------
+**nodejs** - Install vscode - fails if nodejs is not installed.
 
-You can find changelog on our [GitHub Wiki page](https://github.com/blacksaildivision/lamponsteroids/wiki/Changelog).
+
