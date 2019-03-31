@@ -1,11 +1,38 @@
 ---
 
+## OpenSSL
+
 openssl_build_user: lei
 openssl_build_group: wheel
+
+## Git
 
 git_build_user: lei
 git_build_group: wheel
 git_version: 2.19.2
 
+## Node.js
+
 # Override role default
 nodejs_version: "8.15.0"
+
+## Amazon - AWS CLI
+
+# List of Linux users to give access to CLI:
+awscli_users:
+  - lei
+
+# Should credential files and defaults be also set up for root account?
+awscli_users_root: no
+
+# AWS Access Key ID - use vault file
+#awscli_aws_access_key_id:
+
+# AWS Secret Access Key - use vault file
+#awscli_aws_secret_access_key:
+
+# Default region name (US East - Ohio)
+awscli_default_region_name: us-east-2
+
+# Default output format
+awscli_default_output_format: text

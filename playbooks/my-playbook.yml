@@ -24,6 +24,7 @@
 
   vars_files:
     - ../vars/my-vars.yml
+    - ../vault/credentials.yml
 
 # You can also include custom variable files that will override any defaults from roles
 

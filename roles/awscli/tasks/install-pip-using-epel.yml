@@ -1,0 +1,32 @@
+# Installing AWS CLI is the simplest via PIP.
+#
+# - RHSCL limits ways pip can be initialized and used, because 
+#   you have to enable the collection at the beginning of every session.
+#   (https://access.redhat.com/solutions/527703)
+#
+# - Try use EPEL as an alternative
+#   (https://packaging.python.org/guides/installing-using-linux-tools/)
+# 
+
+- name: enable RHEL "optional" repositories
+  rhsm_repository:
+    name: rhel-7-server-optional-rpms
+    state: enabled
+
+- name: enable RHEL "extras" repositories
+  rhsm_repository:
+    name: rhel-7-server-extras-rpms
+    state: enabled
+
+- name: install EPEL7
+  yum:
+    name: ["https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"]
+    state: present
+
+- name: Make sure that pip is installed
+  yum:
+    name: ['python-pip', 'python-wheel']
+    state: latest
+
+
+

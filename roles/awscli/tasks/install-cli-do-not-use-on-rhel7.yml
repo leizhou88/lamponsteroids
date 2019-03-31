@@ -1,0 +1,90 @@
+
+# Install AWS CLI command line tool
+#
+# - This is the original list of tasks from CentOS from upstream GitHub Repo
+#
+# - For RHEL7, pip must be run with a local user account instead of "root". 
+#   Red Hat website has the following statement 
+#   (https://access.redhat.com/solutions/1519803): 
+#
+#   WARNING: Using pip as root user can OVERWRITE your system python libraries, 
+#   use a virtualenv as a normal user whenever possible to avoid issues when 
+#   packages are upgraded using Red Hat provided RPM's.
+#
+#
+- name: Install AWS CLI
+  pip:
+    name: awscli
+    state: latest
+  tags: [awscli]
+
+
+
+# Create AWS config directory for storing credentials and config
+#
+- name: Create AWS config directory
+  file:
+    path: "/home/{{ item }}/.aws"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0775
+  with_items: "{{ awscli_users }}"
+  tags: [awscli]
+
+- name: Create AWS config directory for root
+  file:
+    path: /root/.aws
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+  when: "awscli_users_root == true"
+  tags: [awscli]
+
+
+
+# Setup credentials file with Access Key and Secret
+#
+- name: Add AWS credentials file
+  template:
+    src: credentials.j2
+    dest: "/home/{{ item }}/.aws/credentials"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0600
+  with_items: "{{ awscli_users }}"
+  tags: [awscli]
+
+- name: Add AWS credentials file for root
+  template:
+    src: credentials.j2
+    dest: /root/.aws/credentials
+    owner: root
+    group: root
+    mode: 0600
+  when: "awscli_users_root == true"
+  tags: [awscli]
+
+
+# Setup config file with default region and output
+#
+- name: Add AWS config file
+  template:
+    src: config.j2
+    dest: "/home/{{ item }}/.aws/config"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0600
+  with_items: "{{ awscli_users }}"
+  tags: [awscli]
+
+- name: Add AWS config file for root
+  template:
+    src: config.j2
+    dest: /root/.aws/config"
+    owner: root
+    group: root
+    mode: 0600
+  when: "awscli_users_root == true"
+  tags: [awscli]

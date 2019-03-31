@@ -6,10 +6,10 @@ awscli_users:
 awscli_users_root: yes
 
 # AWS Access Key ID
-awscli_aws_access_key_id: AKIAI44QH8DHBEXAMPLE
+#awscli_aws_access_key_id: AKIAI44QH8DHBEXAMPLE
 
 # AWS Secret Access Key
-awscli_aws_secret_access_key: e7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY
+#awscli_aws_secret_access_key: e7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY
 
 # Default region name
 awscli_default_region_name: us-east-1

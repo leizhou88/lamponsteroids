@@ -1,0 +1,19 @@
+# Installing AWS CLI is the simplest via PIP.
+#
+# - On RHEL7, official instruction is to enable RHSCL then install python27-pyton-pip, which requires tasks in this file.
+# - There are a few issues related to RHSCL approach, see "install-pip-using-epel.yml"
+
+- name: prepare repo and install pip
+  block:
+    - name: enable rhscl repo
+      rhsm_repository:
+        name: rhel-server-rhscl-7-rpms
+
+    - name: Make sure that pip is installed
+      yum:
+        name: ['python27-python-pip']
+        state: latest
+  tags: [awscli]
+
+
+

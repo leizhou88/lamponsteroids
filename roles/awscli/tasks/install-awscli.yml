@@ -1,0 +1,49 @@
+
+# Installs aws cli for a single user, the user Id comes from variable "awscli_users", 
+# which is defined in playbook's vars file, my-vars.yml
+#
+
+- block:
+  - shell: whoami
+    register: result
+    changed_when: False
+
+  - debug:
+      msg: "installing aws cli for user: {{result.stdout}}"
+
+  - fail: 
+      msg: "Running pip install with ROOT - on RHEL 7 this should be avoided with pip. See Red Hat document here: https://access.redhat.com/solutions/1519803"
+    when: result.stdout == "root"
+
+  - name: Install AWS CLI
+    pip:
+      name: awscli
+      state: latest
+  
+  - name: Create AWS config directory
+    file:
+      path: "/home/{{ aws_user }}/.aws"
+      state: directory
+      owner: "{{ aws_user }}"
+      group: "{{ aws_user }}"
+      mode: 0775
+  
+  - name: Add AWS credentials file
+    template:
+      src: credentials.j2
+      dest: "/home/{{ aws_user }}/.aws/credentials"
+      owner: "{{ aws_user }}"
+      group: "{{ aws_user }}"
+      mode: 0600
+  
+  - name: Add AWS config file
+    template:
+      src: config.j2
+      dest: "/home/{{ aws_user }}/.aws/config"
+      owner: "{{ aws_user }}"
+      group: "{{ aws_user }}"
+      mode: 0600
+
+  become: yes
+  become_user: "{{aws_user}}"
+  
