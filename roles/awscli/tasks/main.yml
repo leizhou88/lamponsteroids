@@ -1,21 +1,14 @@
-# Installing AWS CLI is the simplest via PIP.
-#
-# - use EPEL approach
+# Installs AWS client using instructions on the following Amazon document:
 # 
 
-- name: prepare repo and install pip using EPEL
-  include_tasks: install-pip-using-epel.yml
-  become: yes
-  become_user: root
-  tags: [awscli]
-
-- debug:
+- name: dump RHEL user names that awscli will be installed for
+  debug:
     msg: "awscli_users: {{awscli_users}}"
 
 - name: installing aws-cli
   include_tasks: install-awscli.yml
   vars:
     - aws_user: "{{item}}"
-  loop: "{{awscli_users}}"  
+  with_items: "{{awscli_users}}"  
   tags: [awscli]
 

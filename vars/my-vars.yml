@@ -18,12 +18,13 @@ nodejs_version: "8.15.0"
 
 ## Amazon - AWS CLI
 
+# URL for downloading AWS CLI bundle installer
+awscli_bundle_url: https://s3.amazonaws.com/aws-cli
+awscli_bundle_file: awscli-bundle.zip
+
 # List of Linux users to give access to CLI:
 awscli_users:
   - lei
-
-# Should credential files and defaults be also set up for root account?
-awscli_users_root: no
 
 # AWS Access Key ID - use vault file
 #awscli_aws_access_key_id:
@@ -34,5 +35,5 @@ awscli_users_root: no
 # Default region name (US East - Ohio)
 awscli_default_region_name: us-east-2
 
-# Default output format
+# Default output format: text | json
 awscli_default_output_format: text

@@ -1,0 +1,12 @@
+# check for user account restriction
+
+- shell: whoami
+  register: result
+  changed_when: False
+
+- debug:
+    msg: "installing aws cli for user: {{result.stdout}}"
+
+- fail: 
+    msg: "Running pip install with ROOT - on RHEL 7 this should be avoided with pip. See Red Hat document here: https://access.redhat.com/solutions/1519803"
+  when: result.stdout == "root"

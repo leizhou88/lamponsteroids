@@ -1,25 +1,65 @@
-
-# Installs aws cli for a single user, the user Id comes from variable "awscli_users", 
+# Downloads and installs aws cli for a single user, the user Id comes from variable "awscli_users", 
 # which is defined in playbook's vars file, my-vars.yml
 #
 
 - block:
-  - shell: whoami
-    register: result
-    changed_when: False
+  - include_tasks: check.yml
+
+  - name: creating temp folder on localhost
+    tempfile:
+      state: directory
+      path: "{{lookup('env', 'HOME')}}"
+      suffix: _download
+    register: tmp_download_folder
 
   - debug:
-      msg: "installing aws cli for user: {{result.stdout}}"
+      msg: 
+        - "Result of creating temporary download folder:"
+        - "{{tmp_download_folder}}"
 
-  - fail: 
-      msg: "Running pip install with ROOT - on RHEL 7 this should be avoided with pip. See Red Hat document here: https://access.redhat.com/solutions/1519803"
-    when: result.stdout == "root"
+  - name: download-awscli-bundle-installer.yml
+    get_url:
+      url: "{{awscli_bundle_url}}/{{awscli_bundle_file}}"
+      dest: "{{tmp_download_folder.path}}"
+      mode: 0740
 
+  - name: unzip downloaded bundle
+    unarchive:
+      remote_src: Yes
+      src: "{{tmp_download_folder.path}}/{{awscli_bundle_file}}"
+      dest: "{{tmp_download_folder.path}}"
+      
   - name: Install AWS CLI
-    pip:
-      name: awscli
-      state: latest
+    shell: "{{tmp_download_folder.path}}/awscli-bundle/install -b ~/bin/aws"
+    register: install_awscli_result
+
+  - debug:
+      msg: 
+        - "result of aws cli install: "
+        - "{{install_awscli_result}}"
   
+  # ensure $Path contains an entry of /home/[user]/bin
+  - name: check if user's $PATH already contains ~/bin entry
+    shell: "echo $PATH | grep -Eo '/home/{{aws_user}}/bin:|/home/{{aws_user}}/bin$'"
+    # grep command may return 1 if string not found
+    ignore_errors: Yes
+    register: user_bin_path
+
+  - fail:
+      msg: error checking user's $PATH setting
+    when: user_bin_path.rc > 1
+
+  - name: update user's .bashrc file only if it does not contain ~/bin already
+    shell: "echo export PATH=$PATH:~/bin >> ~/.bashrc"
+    register: update_bashrc_result
+    when: user_bin_path == ""
+
+  - debug:
+      msg: 
+        - result updating user's .bashrc file
+        - "{{update_bashrc_result}}"
+
+  # quickly configure aws cli
   - name: Create AWS config directory
     file:
       path: "/home/{{ aws_user }}/.aws"
@@ -27,19 +67,19 @@
       owner: "{{ aws_user }}"
       group: "{{ aws_user }}"
       mode: 0775
+
+  - name: Add AWS config file
+    template:
+      src: config.j2
+      dest: "/home/{{ aws_user }}/.aws/config"
+      owner: "{{ aws_user }}"
+      group: "{{ aws_user }}"
+      mode: 0600
   
   - name: Add AWS credentials file
     template:
       src: credentials.j2
       dest: "/home/{{ aws_user }}/.aws/credentials"
-      owner: "{{ aws_user }}"
-      group: "{{ aws_user }}"
-      mode: 0600
-  
-  - name: Add AWS config file
-    template:
-      src: config.j2
-      dest: "/home/{{ aws_user }}/.aws/config"
       owner: "{{ aws_user }}"
       group: "{{ aws_user }}"
       mode: 0600

@@ -4,7 +4,8 @@
 #   you have to enable the collection at the beginning of every session.
 #   (https://access.redhat.com/solutions/527703)
 #
-# - Try use EPEL as an alternative
+# - Tried use EPEL as an alternative but still issues - the 1st task below may hang
+#   without obvious reason on RHEL 7.6.x.
 #   (https://packaging.python.org/guides/installing-using-linux-tools/)
 # 
 

@@ -1,0 +1,18 @@
+# Following AWS instruction "Install the AWS CLI without Sudo (Linux, macOS,
+# or Unix)", at https://docs.aws.amazon.com/cli/latest/userguide/install-bundle.html
+
+- name: "download awscli bundle to local folder {{download_dest}} "
+  get_url:
+    url: "{{awscli_bundle_url}}/{{awscli_bundle_file}}"
+    dest: "{{download_dest}}"
+    mode: 0740
+
+- shell: "ls -al {{download_dest}}"
+  register: list_download_folder
+
+- debug:
+    msg: 
+      - "list files in download folder {{download_dest}}:"
+      - "{{list_download_folder.stdout_lines}}"
+  
+
